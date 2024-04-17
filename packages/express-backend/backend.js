@@ -38,10 +38,7 @@ const users = {
 const findUserByName = (name) => {
   return users["users_list"].filter((user) => user["name"] === name);
 };
-app.get("/", (req, res) => (
-  res.send("Hello World!")
-));
-
+app.get("/", (req, res) => res.send("Hello World!"));
 
 // get all users
 app.get("/users", (req, res) => {
@@ -74,7 +71,7 @@ app.use(cors());
 app.use(express.json());
 
 const addUser = (user) => {
-  const random_ID = Math.random().toString(36).substring(2,9);
+  const random_ID = Math.random().toString(36).substring(2, 9);
   user.id = random_ID;
   users["users_list"].push(user);
   return user;
@@ -82,8 +79,10 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.status(201).send("Successful User Insertion");
+  const addedUser = addUser(userToAdd);
+  //res.status(201).send("Successful User Insertion");
+  // return user object along with status code
+  res.status(201).json(addedUser);
 });
 
 app.get("/users/:id", (req, res) => {
@@ -98,10 +97,10 @@ app.get("/users/:id", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
-  const index = users.users_list.findIndex((user) => user.id == id);
+  const index = users.users_list.findIndex((user) => user.id === id);
   if (index !== -1) {
     users.users_list.splice(index, 1);
-    res.status(200).send("User deleted successfully");
+    res.status(204).send("User deleted successfully");
   } else {
     res.status(404).send("User not found");
   }
