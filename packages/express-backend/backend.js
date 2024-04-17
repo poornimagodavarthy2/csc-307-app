@@ -42,6 +42,7 @@ app.get("/", (req, res) => (
   res.send("Hello World!")
 ));
 
+
 // get all users
 app.get("/users", (req, res) => {
   const { name, job } = req.query;
@@ -68,11 +69,13 @@ app.get("/users", (req, res) => {
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
-  
+
 app.use(cors());
 app.use(express.json());
 
 const addUser = (user) => {
+  const random_ID = Math.random().toString(36).substring(2,9);
+  user.id = random_ID;
   users["users_list"].push(user);
   return user;
 };
@@ -80,7 +83,7 @@ const addUser = (user) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.send();
+  res.status(201).send("Successful User Insertion");
 });
 
 app.get("/users/:id", (req, res) => {
