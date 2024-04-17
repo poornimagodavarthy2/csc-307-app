@@ -1,5 +1,6 @@
 // backend.js
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
@@ -37,6 +38,10 @@ const users = {
 const findUserByName = (name) => {
   return users["users_list"].filter((user) => user["name"] === name);
 };
+app.get("/", (req, res) => (
+  res.send("Hello World!")
+));
+
 // get all users
 app.get("/users", (req, res) => {
   const { name, job } = req.query;
@@ -63,6 +68,8 @@ app.get("/users", (req, res) => {
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
+  
+app.use(cors());
 app.use(express.json());
 
 const addUser = (user) => {
